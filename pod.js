@@ -1,8 +1,21 @@
+function processarDados() {
+    const input = document.getElementById('inputDados').value;
+    const resultadoDiv = document.getElementById('resultado');
+    
+    try {
+        const { sabores, totaisTamanhos } = processarDadosVendas(input);
+        const tabelaFormatada = gerarTabelaFormatada(sabores, totaisTamanhos);
+        resultadoDiv.textContent = tabelaFormatada;
+    } catch (error) {
+        resultadoDiv.textContent = '❌ Erro: ' + error.message;
+    }
+}
+
 function processarDadosVendas(input) {
     const config = {
         tamanhosValidos: [
             'V15', 'V50', 'V80', 'V120', 'V150', 'V250',
-            'REFIL 10K', 'ELFBAR 10K', 'ELF BAR 10K', 'BLACK 20K', 'ELF BAR 30K'
+            'REFIL 10K', 'ELFBAR 10K', 'BLACK 20K', 'ELF BAR 30K'
         ],
         termosIgnorar: ['IGNITE', 'FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
@@ -12,14 +25,14 @@ function processarDadosVendas(input) {
             'BABBALOO': 'BUBBALOO',
             'ICEMENTA': 'ICE MENTA',
             'KIWY': 'KIWI',
-            'STRAWBERRY': 'STRAWBERRY'
+            'STRAWBERRY': 'STRAWBERRY',
+            'GRAEPE': 'GRAPE'
         }
     };
 
     const sabores = {};
     const totaisTamanhos = {};
     let tamanhoAtual = null;
-
     const tamanhosValidos = new Set(config.tamanhosValidos.map(t => t.toUpperCase().replace(/\s+/g, ' ')));
 
     input.split('\n').forEach(linha => {
@@ -81,7 +94,6 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'REFIL 10K', 'ELFBAR 10K', 'BLACK 20K', 'ELF BAR 30K'
     ].filter(t => t in totaisTamanhos);
 
-    // Preparar dados
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
     const linhas = [cabecalho];
 
@@ -125,69 +137,3 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
 
     return tabela.join('\n');
 }
-
-const inputTeste = `
-[18:33, 01/04/2025] Matheus: v150 ignite 65,00
-1 green apple✅
-
-v80 ignite 65,00 
-1 grape ice✅
-1 green apple✅
-
-v250 ignite 90,00 + 20,00 frete
-1 pineaaple kiwi dragon✅
-1 sweet and sour✅
-
-Carolina D A
-[18:34, 01/04/2025] Matheus: v150 ignite 65,00
-1 green apple✅
-
-v80 ignite 65,00 
-1 grape ice✅
-1 green apple✅
-
-v250 ignite 90,00 + 20,00 frete
-1 pineaaple kiwi dragon✅
-1 sweet and sour✅
-
-Carolina D A
-[18:34, 01/04/2025] Matheus: v150 ignite 65,00
-1 green apple✅
-
-v80 ignite 65,00 
-1 grape ice✅
-1 green apple✅
-
-v250 ignite 90,00 + 20,00 frete
-1 pineaaple kiwi dragon✅
-1 sweet and sour✅
-
-Carolina D A
-[18:34, 01/04/2025] Matheus: v150 ignite 65,00
-1 green apple✅
-
-v80 ignite 65,00 
-1 grape ice✅
-1 green apple✅
-
-v250 ignite 90,00 + 20,00 frete
-1 pineaaple kiwi dragon✅
-1 sweet and sour✅
-
-Carolina D A
-[18:34, 01/04/2025] Matheus: v150 ignite 65,00
-1 green apple✅
-
-v80 ignite 65,00 
-1 grape ice✅
-1 green apple✅
-
-v250 ignite 90,00 + 20,00 frete
-1 pineaaple kiwi dragon✅
-1 sweet and sour✅
-
-Carolina D A
-`;
-
-const { sabores, totaisTamanhos } = processarDadosVendas(inputTeste);
-console.log(gerarTabelaFormatada(sabores, totaisTamanhos));

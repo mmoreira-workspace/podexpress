@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Analisador de Vendas de POD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        textarea {
+            width: 100%;
+            height: 500px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        button {
+            padding: 12px 25px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: transform 0.2s, background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        #resultado {
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .titulo {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 35px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .box-titulo {
+            font-size: 18px;
+            color: #444;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="titulo">📊 Analisador de Vendas POD</h1>
+    
+    <div class="container">
+        <div>
+            <div class="box-titulo">📥 Entrada de Dados</div>
+            <textarea id="inputDados" placeholder="Cole aqui os dados das vendas..."></textarea>
+            <button onclick="processarDados()">🔍 Processar Dados</button>
+        </div>
+        
+        <div>
+            <div class="box-titulo">📈 Resultados</div>
+            <div id="resultado"></div>
+        </div>
+    </div>
+
+    <script src="pod.js"></script>
+</body>
+</html>
