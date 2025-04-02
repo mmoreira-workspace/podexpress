@@ -23,7 +23,6 @@ body {
     .container {
         display: flex;
         flex-direction: column;
-        gap: 50px;
 
         @include desktop {
             display: grid;
@@ -60,6 +59,23 @@ body {
                     border-radius: 8px;
                     font-size: 14px;
                     resize: vertical;
+                }
+            }
+        }
+
+        .box-2 {
+            margin-top: 50px;
+
+            .baixar-csv {
+                margin-top: 40px;
+                display: flex;
+                margin-left: auto;
+                margin-right: auto;
+                flex-direction: column;
+            
+                #nomeArquivo {
+                    width: 200px;
+                    text-align: center;
                 }
             }
         }
@@ -100,15 +116,3 @@ button {
     line-height: 1.5;
 }
 
-.baixar-csv {
-    margin-top: 40px;
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    flex-direction: column;
-
-    #nomeArquivo {
-        width: 200px;
-        text-align: center;
-    }
-}
