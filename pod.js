@@ -15,7 +15,10 @@ function processarDadosVendas(input) {
     const config = {
         tamanhosValidos: [
             'V15', 'V50', 'V80', 'V120', 'V150', 'V250',
-            'REFIL 10K', 'ELFBAR 10K', 'BLACK 20K', 'ELF BAR 30K'
+            'REFIL 10K', 'ELFBAR 10K', 'ELF10K', 'ELF EW KIT',
+            'BLACK 20K', 'ELF BAR 30K', 'ELFBAR 30K', 'JULL', 'REFIL P100',
+            'REFILP100', 'ELF9K', 'ELF 9K', 'LIFE POD SK', 'LIFE POD REFIL 8K',
+            'ZYN', 'TACJA', 'ELFBAR 23K', 'ELFBAR23K', 
         ],
         termosIgnorar: ['IGNITE', 'FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
