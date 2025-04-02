@@ -38,10 +38,6 @@ body {
                 margin-bottom: 15px;
                 font-weight: bold;
                 text-align: center;
-
-                @include desktop {
-                    text-align: start;
-                }
             }
 
             textarea {
@@ -79,10 +75,6 @@ body {
                 margin-right: auto;
                 flex-direction: column;
 
-                @include desktop {
-                    margin-left: 0;
-                }
-            
                 #nomeArquivo {
                     width: 200px;
                     text-align: center;
