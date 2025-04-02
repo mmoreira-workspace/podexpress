@@ -20,7 +20,6 @@ body {
 .main .container {
   display: flex;
   flex-direction: column;
-  gap: 50px;
 }
 @media (min-width: 1024px) {
   .main .container {
@@ -59,6 +58,20 @@ body {
     resize: vertical;
   }
 }
+.main .container .box-2 {
+  margin-top: 50px;
+}
+.main .container .box-2 .baixar-csv {
+  margin-top: 40px;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: column;
+}
+.main .container .box-2 .baixar-csv #nomeArquivo {
+  width: 200px;
+  text-align: center;
+}
 
 button {
   padding: 12px 25px;
@@ -91,18 +104,6 @@ button:hover {
   overflow-x: auto;
   font-size: 14px;
   line-height: 1.5;
-}
-
-.baixar-csv {
-  margin-top: 40px;
-  display: flex;
-  margin-left: auto;
-  margin-right: auto;
-  flex-direction: column;
-}
-.baixar-csv #nomeArquivo {
-  width: 200px;
-  text-align: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
