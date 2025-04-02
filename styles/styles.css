@@ -34,11 +34,6 @@ body {
   font-weight: bold;
   text-align: center;
 }
-@media (min-width: 1024px) {
-  .main .container .box-1 .box-titulo, .main .container .box-2 .box-titulo {
-    text-align: start;
-  }
-}
 .main .container .box-1 textarea, .main .container .box-2 textarea {
   height: 200px;
   width: 80%;
@@ -73,11 +68,6 @@ body {
   margin-left: auto;
   margin-right: auto;
   flex-direction: column;
-}
-@media (min-width: 1024px) {
-  .main .container .box-2 .baixar-csv {
-    margin-left: 0;
-  }
 }
 .main .container .box-2 .baixar-csv #nomeArquivo {
   width: 200px;
