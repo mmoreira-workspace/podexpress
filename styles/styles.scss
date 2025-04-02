@@ -9,7 +9,6 @@ body {
 }
 
 .main {
-    overflow: hidden;
 
     .titulo {
         text-align: center;
@@ -41,6 +40,10 @@ body {
                 margin-bottom: 15px;
                 font-weight: bold;
                 text-align: center;
+
+                @include desktop {
+                    text-align: start;
+                }
             }
 
             textarea {
@@ -66,12 +69,20 @@ body {
         .box-2 {
             margin-top: 50px;
 
+            @include desktop {
+                margin: 0;
+            }
+
             .baixar-csv {
                 margin-top: 40px;
                 display: flex;
                 margin-left: auto;
                 margin-right: auto;
                 flex-direction: column;
+
+                @include desktop {
+                    margin-left: 0;
+                }
             
                 #nomeArquivo {
                     width: 200px;
