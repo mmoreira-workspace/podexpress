@@ -207,7 +207,7 @@ function gerarCSV(sabores, totaisTamanhos) {
 function baixarCSV() {
     const input = document.getElementById('inputDados').value;
     const nomeArquivoInput = document.getElementById('nomeArquivo').value.trim();
-    const nomeArquivo = nomeArquivoInput ? nomeArquivoInput : 'resultado'; // Nome padrão se o campo estiver vazio
+    const nomeArquivo = nomeArquivoInput ? nomeArquivoInput : 'resultado';
 
     const { sabores, totaisTamanhos } = processarDadosVendas(input);
     const csv = gerarCSV(sabores, totaisTamanhos);
