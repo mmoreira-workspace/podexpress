@@ -206,6 +206,9 @@ function gerarCSV(sabores, totaisTamanhos) {
 
 function baixarCSV() {
     const input = document.getElementById('inputDados').value;
+    const nomeArquivoInput = document.getElementById('nomeArquivo').value.trim();
+    const nomeArquivo = nomeArquivoInput ? nomeArquivoInput : 'resultado'; // Nome padrão se o campo estiver vazio
+
     const { sabores, totaisTamanhos } = processarDadosVendas(input);
     const csv = gerarCSV(sabores, totaisTamanhos);
 
@@ -213,7 +216,7 @@ function baixarCSV() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'resultado.csv';
+    link.download = `${nomeArquivo}.csv`;
     link.click();
     URL.revokeObjectURL(url);
 }

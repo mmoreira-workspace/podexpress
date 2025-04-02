@@ -15,13 +15,14 @@
             <div class="box-1">
                 <div class="box-titulo">Input</div>
                 <textarea id="inputDados" placeholder="Copiar e colar a conversa do Whats"></textarea>
-                <button onclick="processarDados()">Click</button>
+                <button onclick="processarDados()">Converter</button>
             </div>
 
             <div class="box-2">
                 <div class="box-titulo">Output</div>
                 <div id="resultado"></div>
-                <div>
+                <div class="baixar-csv">
+                    <input type="text" id="nomeArquivo" placeholder="Digite o nome do arquivo" />
                     <button onclick="baixarCSV()">Baixar CSV</button>
                 </div>
             </div>

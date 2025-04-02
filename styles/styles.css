@@ -6,6 +6,9 @@ body {
   background-color: #f0f2f5;
 }
 
+.main {
+  overflow: hidden;
+}
 .main .titulo {
   text-align: center;
   color: #1a1a1a;
@@ -17,6 +20,7 @@ body {
 .main .container {
   display: flex;
   flex-direction: column;
+  gap: 50px;
 }
 @media (min-width: 1024px) {
   .main .container {
@@ -37,14 +41,23 @@ body {
   text-align: center;
 }
 .main .container .box-1 textarea, .main .container .box-2 textarea {
-  width: 100%;
-  height: 500px;
-  padding: 15px;
-  font-family: "Courier New", monospace;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  font-size: 14px;
-  resize: vertical;
+  height: 200px;
+  width: 80%;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 1024px) {
+  .main .container .box-1 textarea, .main .container .box-2 textarea {
+    width: 100%;
+    height: 600px;
+    padding: 15px;
+    font-family: "Courier New", monospace;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+  }
 }
 
 button {
@@ -57,6 +70,11 @@ button {
   font-size: 16px;
   margin-top: 15px;
   transition: transform 0.2s, background 0.3s;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 button:hover {
   background: #0056b3;
@@ -73,6 +91,18 @@ button:hover {
   overflow-x: auto;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.baixar-csv {
+  margin-top: 40px;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: column;
+}
+.baixar-csv #nomeArquivo {
+  width: 200px;
+  text-align: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
