@@ -1,13 +1,40 @@
 function processarDados() {
     const input = document.getElementById('inputDados').value;
-    const resultadoDiv = document.getElementById('resultado');
+    const resultadoConsolidadoDiv = document.getElementById('resultado-consolidado');
+    const clientesContainer = document.getElementById('clientes-container');
+    
+    resultadoConsolidadoDiv.innerHTML = '';
+    clientesContainer.innerHTML = '';
 
     try {
-        const { sabores, totaisTamanhos } = processarDadosVendas(input);
-        const tabelaFormatada = gerarTabelaFormatada(sabores, totaisTamanhos);
-        resultadoDiv.textContent = tabelaFormatada;
+        const { sabores, totaisTamanhos, clientes } = processarDadosVendas(input);
+        
+        const tabelaConsolidada = gerarTabelaFormatada(sabores, totaisTamanhos);
+        resultadoConsolidadoDiv.innerHTML = '<pre>' + tabelaConsolidada + '</pre>';
+        
+        for (const [nomeCliente, dadosCliente] of Object.entries(clientes)) {
+            if (Object.keys(dadosCliente.sabores).length === 0) continue;
+            
+            const boxCliente = document.createElement('div');
+            boxCliente.className = 'box-cliente';
+            
+            const titulo = document.createElement('div');
+            titulo.className = 'box-cliente-titulo';
+            titulo.textContent = `Cliente: ${nomeCliente}`;
+            boxCliente.appendChild(titulo);
+            
+            const conteudo = document.createElement('div');
+            conteudo.className = 'box-cliente-conteudo';
+            
+            const tabelaCliente = gerarTabelaFormatada(dadosCliente.sabores, dadosCliente.totaisTamanhos);
+            conteudo.innerHTML = '<pre>' + tabelaCliente + '</pre>';
+            
+            boxCliente.appendChild(conteudo);
+            clientesContainer.appendChild(boxCliente);
+        }
+        
     } catch (error) {
-        resultadoDiv.textContent = '❌ Erro: ' + error.message;
+        resultadoConsolidadoDiv.textContent = 'Erro: ' + error.message;
     }
 }
 
@@ -42,13 +69,11 @@ function processarDadosVendas(input) {
             'VAPORESSO XROS NANO', 'VAPORESSO XROS 4', 'VAPORESSO XROS 3', 'VAPORESSO XROS', 'VAPORESSO RENOVA COIL ZERO 1.2',
             'VAPORESSO RENOVA COIL ZERO 1.0', 'VAPORESSO RENOVA COIL ZERO', 'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1',
             'VAPORESSO COIL XROS 1.0', 'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6'
-
         ],
         termosIgnorar: ['FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
             'GREPE': 'GRAPE',
             'BLUBERRY': 'BLUEBERRY',
-            'MENTHOL✅': 'MENTHOL',
             'BABBALOO': 'BUBBALOO',
             'ICEMENTA': 'ICE MENTA',
             'KIWY': 'KIWI',
@@ -59,12 +84,26 @@ function processarDadosVendas(input) {
 
     const sabores = {};
     const totaisTamanhos = {};
+    const clientes = {};
     let tamanhoAtual = null;
+    let clienteAtual = null;
     const tamanhosValidos = new Set(config.tamanhosValidos.map(t => t.toUpperCase().replace(/\s+/g, ' ')));
 
     input.split('\n').forEach(linha => {
         const linhaOriginal = linha.trim();
         const linhaProcessada = linhaOriginal.toUpperCase().replace(/[^A-Z0-9\s]/g, ' ');
+
+        if (linhaOriginal.match(/^Cliente:\s*.+/i)) {
+            clienteAtual = linhaOriginal.replace(/^Cliente:\s*/i, '').trim();
+            if (!clientes[clienteAtual]) {
+                clientes[clienteAtual] = {
+                    sabores: {},
+                    totaisTamanhos: {},
+                    pedidos: []
+                };
+            }
+            return;
+        }
 
         const possivelTamanho = Array.from(tamanhosValidos).find(t => {
             const regex = new RegExp(`\\b${t.replace(/\s+/g, '\\s*')}\\b`, 'i');
@@ -75,6 +114,14 @@ function processarDadosVendas(input) {
             tamanhoAtual = possivelTamanho; 
             if (tamanhosValidos.has(tamanhoAtual)) {
                 totaisTamanhos[tamanhoAtual] = totaisTamanhos[tamanhoAtual] || 0;
+                
+                if (clienteAtual) {
+                    clientes[clienteAtual].pedidos.push({
+                        tamanho: tamanhoAtual,
+                        valor: linhaOriginal.match(/\d+[\d,.]*/)?.[0] || '',
+                        itens: []
+                    });
+                }
                 return;
             }
         }
@@ -97,17 +144,49 @@ function processarDadosVendas(input) {
                 if (!sabores[sabor]) {
                     sabores[sabor] = { tamanhos: {}, total: 0 };
                 }
-
                 sabores[sabor].tamanhos[tamanhoAtual] =
                     (sabores[sabor].tamanhos[tamanhoAtual] || 0) + quantidade;
-
                 sabores[sabor].total += quantidade;
                 totaisTamanhos[tamanhoAtual] = (totaisTamanhos[tamanhoAtual] || 0) + quantidade;
+
+                if (clienteAtual) {
+                    if (!clientes[clienteAtual].sabores[sabor]) {
+                        clientes[clienteAtual].sabores[sabor] = { tamanhos: {}, total: 0 };
+                    }
+                    clientes[clienteAtual].sabores[sabor].tamanhos[tamanhoAtual] =
+                        (clientes[clienteAtual].sabores[sabor].tamanhos[tamanhoAtual] || 0) + quantidade;
+                    clientes[clienteAtual].sabores[sabor].total += quantidade;
+                    clientes[clienteAtual].totaisTamanhos[tamanhoAtual] =
+                        (clientes[clienteAtual].totaisTamanhos[tamanhoAtual] || 0) + quantidade;
+                    
+                    if (clientes[clienteAtual].pedidos.length > 0) {
+                        const ultimoPedido = clientes[clienteAtual].pedidos[clientes[clienteAtual].pedidos.length - 1];
+                        ultimoPedido.itens.push({
+                            sabor: sabor,
+                            quantidade: quantidade
+                        });
+                    }
+                }
             }
         }
     });
 
-    return { sabores, totaisTamanhos };
+    return { sabores, totaisTamanhos, clientes };
+}
+
+function gerarTabelasPorCliente(clientes) {
+    let resultado = '';
+    
+    for (const [nomeCliente, dadosCliente] of Object.entries(clientes)) {
+        if (Object.keys(dadosCliente.sabores).length === 0) continue;
+        
+        resultado += `\n\n=== CLIENTE: ${nomeCliente} ===\n\n`;
+        
+        resultado += gerarTabelaFormatada(dadosCliente.sabores, dadosCliente.totaisTamanhos);
+
+    }
+    
+    return resultado;
 }
 
 function gerarTabelaFormatada(sabores, totaisTamanhos) {
@@ -122,7 +201,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'ELFBAR 10KBC', 'ELF BAR 16K', 'ELFBAR 16K', 'ELF BAR 18K', 'ELFBAR 18K', 'ELF BAR 18K TOUCH',
         'ELFBAR 18K TOUCH', 'ELF BAR TOUCH', 'ELFBAR TOUCH', 'ELF BAR 30KTE', 'ELFBAR 30KTE',
         'ELF BAR 5KTE', 'ELFBAR 5KTE', 'EW 16K REFIL', 'EW16K REFIL', 'ELF BAR EW 16000 REFIL',
-        'ELF BAR EW 16K  REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
+        'ELF BAR EW 16K REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
         'ELF BAR EW 9K REFIL', 'ELFBAR EW 9K REFIL', 'ELF BAR EW 9000 REFIL', 'KIT EW 9K', 'KIT EW9K', 'ELF BAR EW 9K',
         'ELF BAR EW 9K', 'ELFBAR EW 9K', 'ELF BAR EW 9000', 'ELF BAR GH23K', 'ELFBAR GH23K', 'GH23K', '23K',
         'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
@@ -135,7 +214,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'LOST ANGEL 20K', 'LOST MARY 16K', 'MASKKING AROMA 6K', 'MASKKING EVO 5K',
         'MR FREEZE 0', 'MR FREEZE 3', 'OXBAR 10K PRO', 'OXBAR 30K PRO', 'OXBAR 8K',
         'OXBAR 9500', 'PYNE POD BOOST 20K', 'RabBeats RC10000', 'STIG NICOTINE POUNCHES',
-        'UWELL CALIBURN AK3', 'UWELL CALIBURN KOKO PRIME', 'Vaporesso Coil GT Cores',
+        'UWELL CALIBURN', 'Vaporesso Coil GT Cores',
         'yGG pouches', 'VELO', 'VAPORESSO XROS NANO 4', 'VAPORESSO XROS NANO 3',
         'VAPORESSO XROS NANO', 'VAPORESSO XROS 4', 'VAPORESSO XROS 3', 'VAPORESSO XROS', 'VAPORESSO RENOVA COIL ZERO 1.2',
         'VAPORESSO RENOVA COIL ZERO 1.0', 'VAPORESSO RENOVA COIL ZERO', 'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1',
@@ -207,16 +286,91 @@ function gerarCSV(sabores, totaisTamanhos) {
 function baixarCSV() {
     const input = document.getElementById('inputDados').value;
     const nomeArquivoInput = document.getElementById('nomeArquivo').value.trim();
-    const nomeArquivo = nomeArquivoInput ? nomeArquivoInput : 'resultado';
+    const nomeArquivo = nomeArquivoInput ? nomeArquivoInput : 'relatorio_vendas';
 
-    const { sabores, totaisTamanhos } = processarDadosVendas(input);
-    const csv = gerarCSV(sabores, totaisTamanhos);
+    try {
+        const { sabores, totaisTamanhos, clientes } = processarDadosVendas(input);
+        
+        let csvContent = [];
+        
+        csvContent.push('=== RELATÓRIO GERAL ===');
+        csvContent.push('');
+        csvContent.push(...gerarCSVTabela(sabores, totaisTamanhos));
+        csvContent.push('');
+        csvContent.push('');
+        
+        csvContent.push('=== RELATÓRIO POR CLIENTE ===');
+        csvContent.push('');
+        
+        for (const [nomeCliente, dadosCliente] of Object.entries(clientes)) {
+            if (Object.keys(dadosCliente.sabores).length === 0) continue;
+            
+            csvContent.push(`CLIENTE: ${nomeCliente}`);
+            csvContent.push('');
+            csvContent.push(...gerarCSVTabela(dadosCliente.sabores, dadosCliente.totaisTamanhos));
+            csvContent.push('');
+            csvContent.push('');
+        }
+        
+        const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${nomeArquivo}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+    } catch (error) {
+        alert('Erro ao gerar CSV: ' + error.message);
+    }
+}
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${nomeArquivo}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+function gerarCSVTabela(sabores, totaisTamanhos) {
+    const ordemTamanhos = [
+        'V15', 'V35', 'V40', 'V50', 'V80', 'V120', 'V150', 'V150 15K', 'V250',
+        'REFIL 10K', 'ELFBAR 10K', 'ELF10K', 'ELF EW KIT',
+        'BLACK 20K', 'ELF BAR 30K', 'ELFBAR 30K', 'JULL', 'REFIL P100',
+        'REFILP100', 'ELF9K', 'ELF 9K', 'LIFE POD SK', 'LIFE POD REFIL 8K',
+        'ZYN', 'ZYN Nicotine Pouches', 'TACJA', 'ELFBAR 23K', 'ELFBAR23K', 'BLACK SHEEP 20K', 'BATERIA',
+        'BLVK 35', 'BLVK 50', 'BLVK 20', 'BLVK SALT', 'CALIBURN A2', 'CALIBURN A3',
+        'CALIBURN G', 'CALIBURN KOKO PRIME', 'RENOVA ZERO 1.0', 'DICKBAR 10K', 'ELF BAR 10KBC',
+        'ELFBAR 10KBC', 'ELF BAR 16K', 'ELFBAR 16K', 'ELF BAR 18K', 'ELFBAR 18K', 'ELF BAR 18K TOUCH',
+        'ELFBAR 18K TOUCH', 'ELF BAR TOUCH', 'ELFBAR TOUCH', 'ELF BAR 30KTE', 'ELFBAR 30KTE',
+        'ELF BAR 5KTE', 'ELFBAR 5KTE', 'EW 16K REFIL', 'EW16K REFIL', 'ELF BAR EW 16000 REFIL',
+        'ELF BAR EW 16K REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
+        'ELF BAR EW 9K REFIL', 'ELFBAR EW 9K REFIL', 'ELF BAR EW 9000 REFIL', 'KIT EW 9K', 'KIT EW9K', 'ELF BAR EW 9K',
+        'ELF BAR EW 9K', 'ELFBAR EW 9K', 'ELF BAR EW 9000', 'ELF BAR GH23K', 'ELFBAR GH23K', 'GH23K', '23K',
+        'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
+        'KING 40K', 'ELF WORLD PE10K', 'ELFWORLD PE10K', 'PE10K', 'ELFBAR NICOTINE PUNCH', 'PUNCH',
+        'ELFLIQ SALT', 'SALT', 'ELF LIQ SALT', 'FUNKY REPUBLIC TI 7K', 'GEEKBAR 15000 PULSE',
+        'GEEKBAR 15K PULSE', 'HIIO', 'HIIO BY MASKKING', 'IGNITE CART P100', 'IGNITE KIT P100',
+        'JUICE MASKKING 3.5', 'JUICE MASKKING 5', 'JUICE MASKKING 2', 'JUICE MR FREEZER',
+        'MR FREEZER', 'MRFREEZER', 'JUICE NAKED', 'NAKED', 'KICK NICOTINE POUCHES',
+        'LIFE POD ECO', 'LIFE POD KIT', 'LIFE POD REFIL', 'LIFE POD REFIL 8K',
+        'LOST ANGEL 20K', 'LOST MARY 16K', 'MASKKING AROMA 6K', 'MASKKING EVO 5K',
+        'MR FREEZE 0', 'MR FREEZE 3', 'OXBAR 10K PRO', 'OXBAR 30K PRO', 'OXBAR 8K',
+        'OXBAR 9500', 'PYNE POD BOOST 20K', 'RabBeats RC10000', 'STIG NICOTINE POUNCHES',
+        'UWELL CALIBURN', 'Vaporesso Coil GT Cores',
+        'yGG pouches', 'VELO', 'VAPORESSO XROS NANO 4', 'VAPORESSO XROS NANO 3',
+        'VAPORESSO XROS NANO', 'VAPORESSO XROS 4', 'VAPORESSO XROS 3', 'VAPORESSO XROS', 'VAPORESSO RENOVA COIL ZERO 1.2',
+        'VAPORESSO RENOVA COIL ZERO 1.0', 'VAPORESSO RENOVA COIL ZERO', 'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1',
+        'VAPORESSO COIL XROS 1.0', 'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6'
+    ].filter(t => t in totaisTamanhos);
+
+    const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
+    const linhas = [cabecalho.join(',')];
+
+    Object.keys(sabores)
+        .sort((a, b) => a.localeCompare(b))
+        .forEach(sabor => {
+            const linha = [sabor];
+            ordemTamanhos.forEach(t => linha.push(sabores[sabor].tamanhos[t] || 0));
+            linha.push(sabores[sabor].total);
+            linhas.push(linha.join(','));
+        });
+
+    linhas.push(['TOTAL', ...ordemTamanhos.map(t => totaisTamanhos[t]),
+        Object.values(totaisTamanhos).reduce((a, b) => a + b, 0)].join(','));
+
+    return linhas;
 }
