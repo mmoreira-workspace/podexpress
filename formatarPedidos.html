@@ -195,7 +195,7 @@
       select.className = 'select-produto';
       select.onchange = atualizarMensagem;
 
-      produtos.sort().forEach(produto => {
+      produtos.forEach(produto => {
         const option = document.createElement('option');
         option.value = produto;
         option.textContent = produto;
