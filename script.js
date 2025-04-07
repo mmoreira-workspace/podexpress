@@ -166,7 +166,7 @@ function processarDadosVendas(input) {
             "PYNE POD BOOST 20K", "RabBeats 10K", "RENOVA ZERO 1.0",
             "STIG NICOTINE POUNCHES", "UWELL CALIBURN", "V15", "V120", "V150", "V250",
             "V35", "V40", "V50", "V80", "VELO", "VAPORESSO", "VAPORESSO COIL",
-            "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN"
+            "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN", "V50 Prateado"
         ],
         termosIgnorar: ['FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
@@ -285,7 +285,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         "PYNE POD BOOST 20K", "RabBeats 10K", "RENOVA ZERO 1.0",
         "STIG NICOTINE POUNCHES", "UWELL CALIBURN", "V15", "V120", "V150", "V250",
         "V35", "V40", "V50", "V80", "VELO", "VAPORESSO", "VAPORESSO COIL",
-        "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN"
+        "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN", "V50 Prateado"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
@@ -421,7 +421,7 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         "PYNE POD BOOST 20K", "RabBeats 10K", "RENOVA ZERO 1.0",
         "STIG NICOTINE POUNCHES", "UWELL CALIBURN", "V15", "V120", "V150", "V250",
         "V35", "V40", "V50", "V80", "VELO", "VAPORESSO", "VAPORESSO COIL",
-        "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN"
+        "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN", "V50 Prateado"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
