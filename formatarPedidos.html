@@ -1,317 +1,282 @@
 <!DOCTYPE html>
- <html lang="pt-BR">
- 
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Formatador de Pedido</title>
-     <style>
-         body {
-             font-family: Arial, sans-serif;
-             padding: 2rem;
-             display: flex;
-             justify-content: center;
-         }
- 
-         .container {
-             max-width: 700px;
-             width: 100%;
-         }
- 
-         .produto {
-             border: 1px solid #ccc;
-             padding: 1rem;
-             margin-bottom: 1rem;
-             border-radius: 8px;
-             background-color: #f9f9f9;
-             position: relative;
-         }
- 
-         .sabores>div {
-             display: flex;
-             align-items: center;
-             margin-bottom: 0.5rem;
-         }
- 
-         textarea {
-             width: 100%;
-             height: 200px;
-             margin-top: 1rem;
-             resize: none;
-         }
- 
-         select,
-         input[type="text"],
-         input[type="number"] {
-             margin-right: 0.5rem;
-             margin-bottom: 0.5rem;
-             padding: 0.3rem;
-             flex: 1;
-         }
- 
-         button {
-             margin-top: 0.5rem;
-             padding: 0.5rem 1rem;
-             cursor: pointer;
-         }
- 
-         .remover-btn {
-             background-color: transparent;
-             color: red;
-             border: none;
-             font-weight: bold;
-             font-size: 1.2rem;
-             padding: 0;
-             margin: 0;
-         }
- 
-         .copiar-btn {
-             background-color: blue;
-             color: white;
-             border: none;
-         }
- 
-         .limpar-btn {
-             background-color: red;
-             color: white;
-             border: none;
-             margin-left: 1rem;
-         }
- 
-         datalist {
-             max-height: 150px;
-             overflow-y: auto;
-         }
- 
-         .remover-produto-botao {
-             background-color: red;
-             color: white;
-             border: none;
-             margin-top: 1rem;
-         }
- 
-         .input-produto {
-             margin-bottom: 20px;
-         }
-     </style>
- </head>
- 
- <body>
-     <div class="container">
-         <div id="produtos-container"></div>
-         <button onclick="adicionarProduto()">Adicionar outro Produto</button>
-         <br><br>
-         <input id="cliente" type="text" placeholder="nome do cliente" oninput="atualizarMensagem()" />
-         <h3>Mensagem formatada</h3>
-         <textarea id="mensagemFormatada" readonly></textarea>
-         <br>
-         <button class="copiar-btn" onclick="copiarMensagem()">Copiar mensagem</button>
-         <button class="limpar-btn" onclick="limparTudo()">Limpar</button>
-     </div>
- 
-     <datalist id="lista-produtos">
-         <option value="BATERIA EW">
-         <option value="BLACK SHEEP 20K">
-         <option value="BLVK 35">
-         <option value="BLVK 50">
-         <option value="BLVK 20">
-         <option value="CALIBURN A2">
-         <option value="CALIBURN A3">
-         <option value="CALIBURN G">
-         <option value="CALIBURN KOKO PRIME">
-         <option value="RENOVA ZERO 1.0">
-         <option value="DICKBAR 10K">
-         <option value="ELFBAR 10KBC">
-         <option value="ELFBAR 10KBC TOUCH">
-         <option value="ELFBAR 16K">
-         <option value="ELFBAR 18K">
-         <option value="ELFBAR 18K TOUCH">
-         <option value="ELFBAR 30KTE">
-         <option value="ELFBAR 5KTE">
-         <option value="ELFBAR EW 16K REFIL">
-         <option value="ELFBAR EW 9K">
-         <option value="ELFBAR EW 9K REFIL">
-         <option value="ELFBAR GH23K">
-         <option value="ELFBAR GOLDEN 10KBC">
-         <option value="ELFBAR ICE KING 40K">
-         <option value="ELF WORLD PE10K">
-         <option value="ELFBAR NICOTINE PUNCH">
-         <option value="ELFLIQ SALT">
-         <option value="HIIO BY MASKKING">
-         <option value="IGNITE CART P100">
-         <option value="IGNITE KIT P100">
-         <option value="V120">
-         <option value="V15">
-         <option value="V150">
-         <option value="V250">
-         <option value="V35">
-         <option value="V40">
-         <option value="V50">
-         <option value="V80">
-         <option value="JUICE MASKKING 3.5">
-         <option value="JUICE MASKKING 5">
-         <option value="JUICE MASKKING 2">
-         <option value="JUICE MR FREEZER">
-         <option value="JUICE NAKED">
-         <option value="JUUL">
-         <option value="KICK NICOTINE POUCHES">
-         <option value="LIFE POD ECO">
-         <option value="LIFE POD KIT">
-         <option value="LIFE POD REFIL 8K">
-         <option value="LIFE POD SK">
-         <option value="LOST MARY 16K">
-         <option value="MR FREEZE 0">
-         <option value="MR FREEZE 3">
-         <option value="OXBAR 10K PRO">
-         <option value="OXBAR 30K PRO">
-         <option value="OXBAR 8K">
-         <option value="OXBAR 9500">
-         <option value="PYNE POD BOOST 20K">
-         <option value="RabBeats 10K">
-         <option value="STIG NICOTINE POUNCHES">
-         <option value="UWELL CALIBURN">
-         <option value="VAPORESSO COIL">
-         <option value="VAPORESSO KIT">
-         <option value="VAPORESSO RENOVA">
-         <option value="VAPORESSO">
-         <option value="VELO">
-         <option value="YGG POUCHES">
-         <option value="ZYN">
-         <option value="ZEN SNUS">
-         <option value="FREE">
-     </datalist>
- 
- 
-     <script>
-         const produtosContainer = document.getElementById('produtos-container');
-         const mensagemField = document.getElementById('mensagemFormatada');
-         const clienteInput = document.getElementById('cliente');
-         let contagemProdutos = 0;
- 
-         function criarCampoProduto(indexProduto) {
-             const input = document.createElement('input');
-             input.setAttribute('list', 'lista-produtos');
-             input.placeholder = 'Produto';
-             input.oninput = atualizarMensagem;
-             input.className = 'input-produto';
-             return input;
-         }
- 
-         function criarCampoQuantidade(indexProduto, indexSabor) {
-             const select = document.createElement('select');
-             for (let i = 1; i <= 50; i++) {
-                 const option = document.createElement('option');
-                 option.value = i;
-                 option.textContent = i;
-                 select.appendChild(option);
-             }
-             select.onchange = atualizarMensagem;
-             return select;
-         }
- 
-         function criarCampoSabor(indexProduto, indexSabor) {
-             const input = document.createElement('input');
-             input.type = 'text';
-             input.placeholder = 'Digite o sabor';
-             input.oninput = atualizarMensagem;
-             return input;
-         }
- 
-         function adicionarSabor(produtoDiv, indexProduto) {
-             const container = produtoDiv.querySelector('.sabores');
-             const indexSabor = container.children.length;
-             const linha = document.createElement('div');
-             const qtd = criarCampoQuantidade(indexProduto, indexSabor);
-             const sabor = criarCampoSabor(indexProduto, indexSabor);
-             const remover = document.createElement('button');
-             remover.textContent = '✕';
-             remover.className = 'remover-btn';
-             remover.onclick = () => {
-                 linha.remove();
-                 atualizarMensagem();
-             };
-             linha.appendChild(qtd);
-             linha.appendChild(sabor);
-             linha.appendChild(remover);
-             container.appendChild(linha);
-         }
- 
-         function adicionarProduto() {
-             const indexProduto = contagemProdutos++;
-             const produtoDiv = document.createElement('div');
-             produtoDiv.className = 'produto';
- 
-             const produtoInput = criarCampoProduto(indexProduto);
-             produtoDiv.appendChild(produtoInput);
-             produtoDiv.appendChild(document.createElement('br'));
- 
-             const saboresDiv = document.createElement('div');
-             saboresDiv.className = 'sabores';
-             produtoDiv.appendChild(saboresDiv);
- 
-             const botaoAdicionarSabor = document.createElement('button');
-             botaoAdicionarSabor.textContent = '+';
-             botaoAdicionarSabor.type = 'button';
-             botaoAdicionarSabor.onclick = () => adicionarSabor(produtoDiv, indexProduto);
-             produtoDiv.appendChild(botaoAdicionarSabor);
- 
-             if (contagemProdutos > 1) {
-                 const botaoRemoverProduto = document.createElement('button');
-                 botaoRemoverProduto.textContent = 'Remover Produto';
-                 botaoRemoverProduto.className = 'remover-produto-botao';
-                 botaoRemoverProduto.onclick = () => {
-                     produtoDiv.remove();
-                     atualizarMensagem();
-                 };
-                 produtoDiv.appendChild(document.createElement('br'));
-                 produtoDiv.appendChild(botaoRemoverProduto);
-             }
- 
-             produtosContainer.appendChild(produtoDiv);
-             adicionarSabor(produtoDiv, indexProduto);
-         }
- 
-         function atualizarMensagem() {
-             const cliente = clienteInput.value.trim();
-             let mensagem = '';
-             const produtos = document.querySelectorAll('.produto');
-             produtos.forEach((produtoDiv) => {
-                 const tipo = produtoDiv.querySelector('input[list="lista-produtos"]').value;
-                 if (tipo) {
-                     mensagem += `${tipo}\n`;
-                     const sabores = produtoDiv.querySelectorAll('.sabores > div');
-                     sabores.forEach((saborDiv) => {
-                         const quantidade = saborDiv.querySelector('select')?.value;
-                         const sabor = saborDiv.querySelector('input[type="text"]').value;
-                         if (quantidade && sabor) {
-                             mensagem += `${quantidade} ${sabor}✅\n`;
-                         }
-                     });
-                     mensagem += '\n';
-                 }
-             });
-             if (cliente) {
-                 mensagem += `Cliente: ${cliente}`;
-             }
-             mensagemField.value = mensagem;
-         }
- 
-         function copiarMensagem() {
-             mensagemField.select();
-             document.execCommand('copy');
-             alert('Mensagem copiada!');
-         }
- 
-         function limparTudo() {
-             produtosContainer.innerHTML = '';
-             clienteInput.value = '';
-             mensagemField.value = '';
-             contagemProdutos = 0;
-             adicionarProduto();
-         }
- 
-         adicionarProduto();
-     </script>
- </body>
- 
- </html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Formatador de Pedido</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .produto {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      position: relative;
+    }
+
+    .sabores>div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-top: 1rem;
+      resize: none;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"] {
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      padding: 0.3rem;
+      flex: 1;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .remover-btn {
+      background-color: transparent;
+      color: red;
+      border: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 0;
+      margin: 0;
+    }
+
+    .copiar-btn {
+      background-color: blue;
+      color: white;
+      border: none;
+    }
+
+    .limpar-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      margin-left: 1rem;
+    }
+
+    .remover-produto-botao {
+      background-color: red;
+      color: white;
+      border: none;
+      margin-top: 1rem;
+    }
+
+    .input-produto {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="produtos-container"></div>
+    <button onclick="adicionarProduto()">Adicionar outro Produto</button>
+    <br><br>
+    <input id="cliente" type="text" placeholder="nome do cliente" oninput="atualizarMensagem()" />
+    <h3>Mensagem formatada</h3>
+    <textarea id="mensagemFormatada" readonly></textarea>
+    <br>
+    <button class="copiar-btn" onclick="copiarMensagem()">Copiar mensagem</button>
+    <button class="limpar-btn" onclick="limparTudo()">Limpar</button>
+  </div>
+
+  <script>
+    const produtosContainer = document.getElementById('produtos-container');
+    const mensagemField = document.getElementById('mensagemFormatada');
+    const clienteInput = document.getElementById('cliente');
+    let contagemProdutos = 0;
+
+    const produtos = [
+      "BATERIA EW", "BLACK SHEEP 20K", "BLVK 20", "BLVK 35", "BLVK 50",
+      "CALIBURN A2", "CALIBURN A3", "CALIBURN G", "CALIBURN KOKO PRIME",
+      "DICKBAR 10K", "ELF WORLD PE10K", "ELFBAR 10KBC", "ELFBAR 10KBC TOUCH",
+      "ELFBAR 16K", "ELFBAR 18K", "ELFBAR 18K TOUCH", "ELFBAR 30KTE",
+      "ELFBAR 5KTE", "ELFBAR EW 16K REFIL", "ELFBAR EW 9K", "ELFBAR EW 9K REFIL",
+      "ELFBAR GH23K", "ELFBAR GOLDEN 10KBC", "ELFBAR ICE KING 40K",
+      "ELFBAR NICOTINE PUNCH", "ELFLIQ SALT", "FREE", "HIIO BY MASKKING",
+      "IGNITE CART P100", "IGNITE KIT P100", "JUICE MASKKING 2",
+      "JUICE MASKKING 3.5", "JUICE MASKKING 5", "JUICE MR FREEZER", "JUICE NAKED",
+      "JUUL", "KICK NICOTINE POUCHES", "LIFE POD ECO", "LIFE POD KIT",
+      "LIFE POD REFIL 8K", "LIFE POD SK", "LOST MARY 16K", "MR FREEZE 0",
+      "MR FREEZE 3", "OXBAR 10K PRO", "OXBAR 30K PRO", "OXBAR 8K", "OXBAR 9500",
+      "PYNE POD BOOST 20K", "RabBeats 10K", "RENOVA ZERO 1.0",
+      "STIG NICOTINE POUNCHES", "UWELL CALIBURN", "V15", "V120", "V150", "V250",
+      "V35", "V40", "V50", "V80", "VELO", "VAPORESSO", "VAPORESSO COIL",
+      "VAPORESSO KIT", "VAPORESSO RENOVA", "YGG POUCHES", "ZEN SNUS", "ZYN"
+    ];
+
+    function criarCampoProduto(indexProduto) {
+      const container = document.createElement('div');
+      container.className = 'input-produto';
+
+      const select = document.createElement('select');
+      select.className = 'select-produto';
+      select.onchange = atualizarMensagem;
+
+      produtos.sort().forEach(produto => {
+        const option = document.createElement('option');
+        option.value = produto;
+        option.textContent = produto;
+        select.appendChild(option);
+      });
+
+      const inputValor = document.createElement('input');
+      inputValor.type = 'text';
+      inputValor.placeholder = 'valor (opcional)';
+      inputValor.style.width = '100px';
+      inputValor.oninput = atualizarMensagem;
+
+      container.appendChild(select);
+      container.appendChild(inputValor);
+      return container;
+    }
+
+    function criarCampoQuantidade(indexProduto, indexSabor) {
+      const select = document.createElement('select');
+      for (let i = 1; i <= 50; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        select.appendChild(option);
+      }
+      select.onchange = atualizarMensagem;
+      return select;
+    }
+
+    function criarCampoSabor(indexProduto, indexSabor) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Digite o sabor';
+      input.oninput = atualizarMensagem;
+      return input;
+    }
+
+    function adicionarSabor(produtoDiv, indexProduto) {
+      const container = produtoDiv.querySelector('.sabores');
+      const indexSabor = container.children.length;
+      const linha = document.createElement('div');
+      const qtd = criarCampoQuantidade(indexProduto, indexSabor);
+      const sabor = criarCampoSabor(indexProduto, indexSabor);
+      const remover = document.createElement('button');
+      remover.textContent = '✕';
+      remover.className = 'remover-btn';
+      remover.onclick = () => {
+        linha.remove();
+        atualizarMensagem();
+      };
+      linha.appendChild(qtd);
+      linha.appendChild(sabor);
+      linha.appendChild(remover);
+      container.appendChild(linha);
+    }
+
+    function adicionarProduto() {
+      const indexProduto = contagemProdutos++;
+      const produtoDiv = document.createElement('div');
+      produtoDiv.className = 'produto';
+
+      const produtoInput = criarCampoProduto(indexProduto);
+      produtoDiv.appendChild(produtoInput);
+      produtoDiv.appendChild(document.createElement('br'));
+
+      const saboresDiv = document.createElement('div');
+      saboresDiv.className = 'sabores';
+      produtoDiv.appendChild(saboresDiv);
+
+      const botaoAdicionarSabor = document.createElement('button');
+      botaoAdicionarSabor.textContent = '+';
+      botaoAdicionarSabor.type = 'button';
+      botaoAdicionarSabor.onclick = () => adicionarSabor(produtoDiv, indexProduto);
+      produtoDiv.appendChild(botaoAdicionarSabor);
+
+      if (contagemProdutos > 1) {
+        const botaoRemoverProduto = document.createElement('button');
+        botaoRemoverProduto.textContent = 'Remover Produto';
+        botaoRemoverProduto.className = 'remover-produto-botao';
+        botaoRemoverProduto.onclick = () => {
+          produtoDiv.remove();
+          atualizarMensagem();
+        };
+        produtoDiv.appendChild(document.createElement('br'));
+        produtoDiv.appendChild(botaoRemoverProduto);
+      }
+
+      produtosContainer.appendChild(produtoDiv);
+      adicionarSabor(produtoDiv, indexProduto);
+    }
+
+    function atualizarMensagem() {
+      const cliente = clienteInput.value.trim();
+      let mensagem = '';
+      const produtos = document.querySelectorAll('.produto');
+      produtos.forEach((produtoDiv) => {
+        const selectProduto = produtoDiv.querySelector('select');
+        const inputValor = produtoDiv.querySelector('input[type="text"]');
+        const tipo = selectProduto?.value || '';
+        const valor = inputValor?.value || '';
+        if (tipo) {
+          mensagem += `${tipo}${valor ? ' ' + valor : ''}\n`;
+          const sabores = produtoDiv.querySelectorAll('.sabores > div');
+          sabores.forEach((saborDiv) => {
+            const quantidade = saborDiv.querySelector('select')?.value;
+            const sabor = saborDiv.querySelector('input[type="text"]')?.value;
+            if (quantidade && sabor) {
+              mensagem += `${quantidade} ${sabor}✅\n`;
+            }
+          });
+          mensagem += '\n';
+        }
+      });
+      if (cliente) {
+        mensagem += `Cliente: ${cliente}`;
+      }
+      mensagemField.value = mensagem;
+    }
+
+    function copiarMensagem() {
+      mensagemField.select();
+      document.execCommand('copy');
+      alert('Mensagem copiada!');
+    }
+
+    function limparTudo() {
+      produtosContainer.innerHTML = '';
+      clienteInput.value = '';
+      mensagemField.value = '';
+      contagemProdutos = 0;
+      adicionarProduto();
+    }
+
+    adicionarProduto();
+  </script>
+</body>
+
+</html>
