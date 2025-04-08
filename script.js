@@ -135,7 +135,7 @@ function processarDadosVendas(input) {
             'ELF BAR EW 16K REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
             'ELFBAR EW 9K REFIL', 'ELF BAR EW 9000 REFIL', 'KIT EW 9K', 'KIT EW9K', 'ELF BAR EW 9K',
             'ELFBAR EW 9K', 'ELF BAR EW 9000', 'ELF BAR GH23K', 'ELFBAR GH23K', 'GH23K', '23K',
-            'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
+            'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', "Elfbar gold bc10k", 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
             'KING 40K', 'ELF WORLD PE10K', 'ELFWORLD PE10K', 'PE10K', 'ELFBAR NICOTINE PUNCH', 'PUNCH',
             'ELFLIQ SALT', 'SALT', 'ELF LIQ SALT', 'FUNKY REPUBLIC TI 7K', 'GEEKBAR 15000 PULSE',
             'GEEKBAR 15K PULSE', 'HIIO', 'HIIO BY MASKKING', 'IGNITE CART P100', 'IGNITE KIT P100',
@@ -152,7 +152,7 @@ function processarDadosVendas(input) {
             'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
             'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
             'FREE', 'RabBeats 10K', 'VAPORESSO', 'VAPORESSO COIL',
-            'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado'
+            'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "Pablo"
         ],
         termosIgnorar: ['FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
@@ -240,7 +240,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'ELF BAR EW 16K REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
         'ELFBAR EW 9K REFIL', 'ELF BAR EW 9000 REFIL', 'KIT EW 9K', 'KIT EW9K', 'ELF BAR EW 9K',
         'ELFBAR EW 9K', 'ELF BAR EW 9000', 'ELF BAR GH23K', 'ELFBAR GH23K', 'GH23K', '23K',
-        'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
+        'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', "Elfbar gold bc10k", 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
         'KING 40K', 'ELF WORLD PE10K', 'ELFWORLD PE10K', 'PE10K', 'ELFBAR NICOTINE PUNCH', 'PUNCH',
         'ELFLIQ SALT', 'SALT', 'ELF LIQ SALT', 'FUNKY REPUBLIC TI 7K', 'GEEKBAR 15000 PULSE',
         'GEEKBAR 15K PULSE', 'HIIO', 'HIIO BY MASKKING', 'IGNITE CART P100', 'IGNITE KIT P100',
@@ -257,7 +257,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
         'FREE', 'RabBeats 10K', 'VAPORESSO', 'VAPORESSO COIL',
-        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado'
+        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "Pablo"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
@@ -362,7 +362,7 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         'ELF BAR EW 16K REFIL', 'ELFBAR EW 16K REFIL', 'EW 9K REFIL', 'EW9K REFIL', 'ELF BAR EW 9K REFIL',
         'ELFBAR EW 9K REFIL', 'ELF BAR EW 9000 REFIL', 'KIT EW 9K', 'KIT EW9K', 'ELF BAR EW 9K',
         'ELFBAR EW 9K', 'ELF BAR EW 9000', 'ELF BAR GH23K', 'ELFBAR GH23K', 'GH23K', '23K',
-        'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
+        'ELF BAR GOLDEN 10KBC', 'ELFBAR GOLDEN 10KBC', "Elfbar gold bc10k", 'ELF BAR ICE KING 40K', 'ELFBAR ICE KING 40K',
         'KING 40K', 'ELF WORLD PE10K', 'ELFWORLD PE10K', 'PE10K', 'ELFBAR NICOTINE PUNCH', 'PUNCH',
         'ELFLIQ SALT', 'SALT', 'ELF LIQ SALT', 'FUNKY REPUBLIC TI 7K', 'GEEKBAR 15000 PULSE',
         'GEEKBAR 15K PULSE', 'HIIO', 'HIIO BY MASKKING', 'IGNITE CART P100', 'IGNITE KIT P100',
@@ -379,7 +379,7 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
         'FREE', 'RabBeats 10K', 'VAPORESSO', 'VAPORESSO COIL',
-        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado'
+        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "Pablo"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
