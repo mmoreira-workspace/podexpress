@@ -217,7 +217,7 @@ function processarDadosVendas(input) {
             "ELF BAR WORLD PE10K": "ELF WORLD PE10K",
             "ELF BAR NICOTINE PUNCH": "ELFBAR NICOTINE PUNCH",
             "ELF LIQ SALT": "ELFLIQ SALT",
-            "HIIO": "HIOO BY MASKING",
+            "HIIO": "HIOO BY MASKKING",
             "IGNITE CART": "IGNITE CART P100",
             "IGNITE KIT": "IGNITE KIT P100",
             "JUICE 3.5": "JUICE MASKKING 3.5",
