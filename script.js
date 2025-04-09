@@ -30,14 +30,13 @@ function separarBlocosPorClienteTopDown(input) {
     return blocos;
 }
 
-
 function processarBlocoDeLinhas(bloco, estruturas, config) {
     let tamanhoAtual = null;
 
     const tamanhosValidos = new Set(config.tamanhosValidos.map(t =>
         t.toUpperCase().replace(/\s+/g, ' ')
     ));
-    
+
     if (!estruturas.clientes[bloco.cliente]) {
         estruturas.clientes[bloco.cliente] = {
             sabores: {},
@@ -47,9 +46,14 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
     }
 
     bloco.linhas.forEach(linhaOriginal => {
-        const linhaProcessada = linhaOriginal
+        let linhaProcessada = linhaOriginal
             .toUpperCase()
             .replace(/[^A-Z0-9\s]/g, ' ');
+
+        Object.entries(config.variacoesTamanhos).forEach(([padrao, correto]) => {
+            const regex = new RegExp(padrao, 'gi');
+            linhaProcessada = linhaProcessada.replace(regex, correto.toUpperCase());
+        });
 
         const possivelTamanho = Array.from(tamanhosValidos).find(t => {
             const regex = new RegExp(`\\b${t.replace(/\s+/g, '\\s*')}\\b`, 'i');
@@ -59,14 +63,14 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
         if (possivelTamanho) {
             tamanhoAtual = possivelTamanho;
 
-            estruturas.totaisTamanhos[tamanhoAtual] = 
+            estruturas.totaisTamanhos[tamanhoAtual] =
                 (estruturas.totaisTamanhos[tamanhoAtual] || 0);
             estruturas.clientes[bloco.cliente].totaisTamanhos[tamanhoAtual] =
                 (estruturas.clientes[bloco.cliente].totaisTamanhos[tamanhoAtual] || 0);
 
             estruturas.clientes[bloco.cliente].pedidos.push({
                 tamanho: tamanhoAtual,
-                valor: linhaOriginal.match(/\d+[\d,.]*/)?.[0] || '',
+                valor: linhaOriginal.match(/\d+[\d,.]*/) ? linhaOriginal.match(/\d+[\d,.]*/)[0] : '',
                 itens: []
             });
 
@@ -74,7 +78,15 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
         }
 
         if (tamanhoAtual && tamanhosValidos.has(tamanhoAtual)) {
-            const matchVenda = linhaOriginal.match(/^\s*(\d+)\s*([^\d]+?)\s*[\W]*$/);
+            let matchVenda = linhaOriginal.match(/^\s*(\d+)\s*([^\d]+?)\s*[\W]*$/);
+
+            if (!matchVenda) {
+                const invertido = linhaOriginal.match(/^\s*([^\d]+?)\s+(\d+)\s*[\W]*$/);
+                if (invertido) {
+                    matchVenda = [linhaOriginal, invertido[2], invertido[1]];
+                }
+            }
+
             if (matchVenda) {
                 const [_, quantidadeStr, saborBruto] = matchVenda;
                 const quantidade = parseInt(quantidadeStr, 10);
@@ -96,7 +108,7 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
                     (estruturas.sabores[sabor].tamanhos[tamanhoAtual] || 0) + quantidade;
                 estruturas.sabores[sabor].total += quantidade;
 
-                estruturas.totaisTamanhos[tamanhoAtual] = 
+                estruturas.totaisTamanhos[tamanhoAtual] =
                     (estruturas.totaisTamanhos[tamanhoAtual] || 0) + quantidade;
 
                 if (!estruturas.clientes[bloco.cliente].sabores[sabor]) {
@@ -163,6 +175,75 @@ function processarDadosVendas(input) {
             'KIWY': 'KIWI',
             'STRAWBERRY': 'STRAWBERRY',
             'GRAEPE': 'GRAPE'
+        },
+        variacoesTamanhos: {
+            "BATERIA": "BATERIA EW",
+            "BLACKSHEEP 20K": "BLACK SHEEP 20K",
+            "CALIBURN KOKO": "CALIBURN KOKO PRIME",
+            "CALIBURN PRIME": "CALIBURN KOKO PRIME",
+            "RENOVA ZERO": "RENOVA ZERO 1.0",
+            "RENOVA 1.0": "RENOVA ZERO 1.0",
+            "DICK BAR 10K": "DICKBAR 10K",
+            "ELF BAR 10KBC": "ELFBAR 10KBC",
+            "ELFBAR 10K": "ELFBAR 10KBC",
+            "ELF BAR 10K": "ELFBAR 10KBC",
+            "ELFBAR TOUCH": "ELFBAR 10KBC TOUCH",
+            "ELF BAR 10KBC TOUCH": "ELFBAR 10KBC TOUCH",
+            "ELF BAR 16K": "ELFBAR 16K",
+            "ELF BAR 18K": "ELFBAR 18K",
+            "ELF BAR 18K TOUCH": "ELFBAR 18K TOUCH",
+            "ELF BAR 30K": "ELFBAR 30KTE",
+            "ELF BAR 5K": "ELFBAR 5KTE",
+            "ELF BAR 30KTE": "ELFBAR 30KTE",
+            "ELF BAR 5KTE": "ELFBAR 5KTE",
+            "ELF BAR EW 16K": "ELFBAR EW 16K REFIL",
+            "ELF BAR 16K": "ELFBAR EW 16K REFIL",
+            "ELFBAR 16K": "ELFBAR EW 16K REFIL",
+            "ELF BAR EW 9K": "ELFBAR EW 9K",
+            "ELF BAR EW 9K REFIL": "ELFBAR EW 9K REFIL",
+            "ELFBAR 23K": "ELFBAR GH23K",
+            "ELF BAR 23K": "ELFBAR GH23K",
+            "ELF BAR GH23K": "ELFBAR GH23K",
+            "ELF BAR GOLDEN 10KBC": "ELFBAR GOLDEN 10KBC",
+            "ELF BAR GOLDEN 10K": "ELFBAR GOLDEN 10KBC",
+            "ELFBAR GOLDEN 10K": "ELFBAR GOLDEN 10KBC",
+            "ELF BAR ICE KING 40K": "ELFBAR ICE KING 40K",
+            "ELF BAR ICE 40K": "ELFBAR ICE KING 40K",
+            "ELFBAR 40K": "ELFBAR ICE KING 40K",
+            "ELF BAR 40K": "ELFBAR ICE KING 40K",
+            "ELF WORLD 10K": "ELF WORLD PE10K",
+            "ELFBAR WORLD 10K": "ELF WORLD PE10K",
+            "ELF BAR WORLD 10K": "ELF WORLD PE10K",
+            "ELF BAR WORLD PE10K": "ELF WORLD PE10K",
+            "ELF BAR NICOTINE PUNCH": "ELFBAR NICOTINE PUNCH",
+            "ELF LIQ SALT": "ELFLIQ SALT",
+            "HIIO": "HIOO BY MASKING",
+            "IGNITE CART": "IGNITE CART P100",
+            "IGNITE KIT": "IGNITE KIT P100",
+            "JUICE 3.5": "JUICE MASKKING 3.5",
+            "JUICE 5": "JUICE MASKKING 5",
+            "JUICE 2": "JUICE MASKKING 2",
+            "JUICE MR": "JUICE MR FREEZER",
+            "JUICE FREEZER": "JUICE MR FREEZER",
+            "KICK NICOTINE": "KICK NICOTINE POUCHES",
+            "LIFEPOD ECO": "LIFE POD ECO",
+            "LIFE ECO": "LIFE POD ECO",
+            "LIFEPOD KIT": "LIFE POD KIT",
+            "LIFE KIT": "LIFE POD KIT",
+            "LIFE REFIL 8K": "LIFE POD REFIL 8K",
+            "LIFE POD 8K": "LIFE POD REFIL 8K",
+            "LIFEPOD 8K": "LIFE POD REFIL 8K",
+            "LIFE SK": "LIFE POD SK",
+            "OXBAR 10K": "OKBAR 10K PRO",
+            "OXBAR 30K": "OKBAR 30K PRO",
+            "OKBAR 9.5K": "OKBAR 9500",
+            "PYNE 20K": "PYNE POD BOOST 20K",
+            "PYNE POD 20K": "PYNE POD BOOST 20K",
+            "PYNE BOOST 20K": "PYNE POD BOOST 20K",
+            "RAB BEASTS 10K": "RABBEATS 10K",
+            "STIG NICOTINE": "STIG NICOTINE POUNCHES",
+            "STIG POUNCHES": "STIG NICOTINE POUNCHES",
+            "YGG": "YGG POUCHES",
         }
     };
 
@@ -189,37 +270,37 @@ function processarDados() {
     const input = document.getElementById('inputDados').value;
     const resultadoConsolidadoDiv = document.getElementById('resultado-consolidado');
     const clientesContainer = document.getElementById('clientes-container');
-    
+
     resultadoConsolidadoDiv.innerHTML = '';
     clientesContainer.innerHTML = '';
 
     try {
         const { sabores, totaisTamanhos, clientes } = processarDadosVendas(input);
-        
+
         const tabelaConsolidada = gerarTabelaFormatada(sabores, totaisTamanhos);
         resultadoConsolidadoDiv.innerHTML = '<pre>' + tabelaConsolidada + '</pre>';
-        
+
         for (const [nomeCliente, dadosCliente] of Object.entries(clientes)) {
             if (Object.keys(dadosCliente.sabores).length === 0) continue;
-            
+
             const boxCliente = document.createElement('div');
             boxCliente.className = 'box-cliente';
-            
+
             const titulo = document.createElement('div');
             titulo.className = 'box-cliente-titulo';
             titulo.textContent = `Cliente: ${nomeCliente}`;
             boxCliente.appendChild(titulo);
-            
+
             const conteudo = document.createElement('div');
             conteudo.className = 'box-cliente-conteudo';
-            
+
             const tabelaCliente = gerarTabelaFormatada(dadosCliente.sabores, dadosCliente.totaisTamanhos);
             conteudo.innerHTML = '<pre>' + tabelaCliente + '</pre>';
-            
+
             boxCliente.appendChild(conteudo);
             clientesContainer.appendChild(boxCliente);
         }
-        
+
     } catch (error) {
         resultadoConsolidadoDiv.textContent = 'Erro: ' + error.message;
     }
@@ -273,7 +354,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         });
 
     linhas.push([
-        'TOTAL', 
+        'TOTAL',
         ...ordemTamanhos.map(t => totaisTamanhos[t]),
         Object.values(totaisTamanhos).reduce((a, b) => a + b, 0)
     ]);
@@ -314,7 +395,7 @@ function baixarCSV() {
 
     try {
         const { sabores, totaisTamanhos, clientes } = processarDadosVendas(input);
-        
+
         let csvContent = [];
         csvContent.push('=== RELATÓRIO GERAL ===');
         csvContent.push('');
@@ -341,7 +422,7 @@ function baixarCSV() {
         link.download = `${nomeArquivo}.csv`;
         link.click();
         URL.revokeObjectURL(url);
-        
+
     } catch (error) {
         alert('Erro ao gerar CSV: ' + error.message);
     }
