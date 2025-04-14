@@ -78,24 +78,17 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
         }
 
         if (tamanhoAtual && tamanhosValidos.has(tamanhoAtual)) {
-            let matchVenda = linhaOriginal.match(/^\s*(\d+)\s*([^\d]+?)\s*[\W]*$/);
-
-            if (!matchVenda) {
-                const invertido = linhaOriginal.match(/^\s*([^\d]+?)\s+(\d+)\s*[\W]*$/);
-                if (invertido) {
-                    matchVenda = [linhaOriginal, invertido[2], invertido[1]];
-                }
-            }
+            let matchVenda = linhaOriginal.match(/^\s*(\d+)\s+([\w.\s]+.*?)\s*$/i);
 
             if (matchVenda) {
                 const [_, quantidadeStr, saborBruto] = matchVenda;
                 const quantidade = parseInt(quantidadeStr, 10);
 
                 let sabor = saborBruto
-                    .replace(/[^A-Za-z\s]/g, '')
-                    .replace(/\s+/g, ' ')
-                    .trim()
-                    .toUpperCase();
+                .replace(/[^A-Za-z0-9.\s]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toUpperCase();
 
                 Object.entries(config.variacoesSabores).forEach(([errado, certo]) => {
                     sabor = sabor.replace(new RegExp(errado, 'gi'), certo.toUpperCase());
@@ -164,7 +157,7 @@ function processarDadosVendas(input) {
             'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
             'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
             'FREE', 'RabBeats 10K', 'VAPORESSO COIL',
-            'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo"
+            'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
         ],
         termosIgnorar: ['FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
         variacoesSabores: {
@@ -340,7 +333,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
         'FREE', 'RabBeats 10K', 'VAPORESSO COIL',
-        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo"
+        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
@@ -462,7 +455,7 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
         'FREE', 'RabBeats 10K', 'VAPORESSO COIL',
-        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo"
+        'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
     ].filter(t => t in totaisTamanhos);
 
     const cabecalho = ['Sabor', ...ordemTamanhos, 'Total'];
