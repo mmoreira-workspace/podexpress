@@ -156,7 +156,7 @@ function processarDadosVendas(input) {
             'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1', 'VAPORESSO COIL XROS 1.0',
             'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
             'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
-            'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWELL CALIBURN", "UWEL CALIBURN",
+            'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWEL CALIBURN",
             'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
         ],
         termosIgnorar: ['FREte', '\\+', 'R\\$', 'REFIL', 'POD', 'º', 'ª', '°'],
@@ -332,7 +332,7 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1', 'VAPORESSO COIL XROS 1.0',
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
-        'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWELL CALIBURN", "UWEL CALIBURN",
+        'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWEL CALIBURN",
         'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
     ].filter(t => t in totaisTamanhos);
 
@@ -454,7 +454,7 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         'VAPORESSO KIT ZERO 2', 'VAPORESSO KIT ZERO 1', 'VAPORESSO COIL XROS 1.0',
         'VAPORESSO COIL XROS 0.8', 'VAPORESSO COIL XROS 0.6',
         'BATERIA EW', 'ELFBAR 10KBC TOUCH', 'ELFBAR EW 9K REFIL',
-        'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWELL CALIBURN", "UWEL CALIBURN",
+        'FREE', 'RabBeats 10K', 'VAPORESSO COIL', "RABBEATS 10K", "HELLWIT", 'HELWIT', "UWEL CALIBURN",
         'VAPORESSO KIT', 'VAPORESSO RENOVA', 'YGG POUCHES', 'ZEN SNUS', 'V50 Prateado', "PABLO", "Pablo", "VAPORESSO"
     ].filter(t => t in totaisTamanhos);
 
