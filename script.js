@@ -33,9 +33,11 @@ function separarBlocosPorClienteTopDown(input) {
 function processarBlocoDeLinhas(bloco, estruturas, config) {
     let tamanhoAtual = null;
 
-    const tamanhosValidos = new Set(config.tamanhosValidos.map(t =>
-        t.toUpperCase().replace(/\s+/g, ' ')
-    ));
+    const tamanhosValidos = config.tamanhosValidos
+        .map(t => t.toUpperCase().replace(/\s+/g, ' '))
+        .sort((a, b) => b.length - a.length);
+
+    const tamanhosValidosSet = new Set(tamanhosValidos);
 
     if (!estruturas.clientes[bloco.cliente]) {
         estruturas.clientes[bloco.cliente] = {
@@ -50,10 +52,6 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
             .toUpperCase()
             .replace(/[^A-Z0-9\s]/g, ' ');
 
-        // Object.entries(config.variacoesTamanhos).forEach(([padrao, correto]) => {
-        //     const regex = new RegExp(padrao, 'gi');
-        //     linhaProcessada = linhaProcessada.replace(regex, correto.toUpperCase());
-        // });
 
         const possivelTamanho = Array.from(tamanhosValidos).find(t => {
             const regex = new RegExp(`\\b${t.replace(/\s+/g, '\\s*')}\\b`, 'i');
@@ -77,7 +75,7 @@ function processarBlocoDeLinhas(bloco, estruturas, config) {
             return;
         }
 
-        if (tamanhoAtual && tamanhosValidos.has(tamanhoAtual)) {
+        if (tamanhoAtual && tamanhosValidosSet.has(tamanhoAtual)) {
             let matchVenda = linhaOriginal.match(/^\s*(\d+)\s+([\w.\s]+.*?)\s*$/i);
 
             if (matchVenda) {
@@ -254,6 +252,9 @@ function processarDadosVendas(input) {
             'RABBEATS 10K',
             'RabBeats 10K',
             'RabBeats RC10000',
+            'RABEATS',
+            'RABBEATS 10',
+            'RABBEATS',
             'REFIL 10K',
             'REFIL P100',
             'REFILP100',
@@ -315,77 +316,6 @@ function processarDadosVendas(input) {
             'STRAWBERRY': 'STRAWBERRY',
             'GRAEPE': 'GRAPE'
         },
-        // variacoesTamanhos: {
-        //     "BATERIA": "BATERIA EW",
-        //     "BLACKSHEEP 20K": "BLACK SHEEP 20K",
-        //     "CALIBURN KOKO": "CALIBURN KOKO PRIME",
-        //     "CALIBURN PRIME": "CALIBURN KOKO PRIME",
-        //     "RENOVA ZERO": "RENOVA ZERO 1.0",
-        //     "RENOVA 1.0": "RENOVA ZERO 1.0",
-        //     "DICK BAR 10K": "DICKBAR 10K",
-        //     "ELF BAR 10KBC": "ELFBAR 10KBC",
-        //     "ELFBAR 10K": "ELFBAR 10KBC",
-        //     "ELF BAR 10K": "ELFBAR 10KBC",
-        //     "ELFBAR TOUCH": "ELFBAR 10KBC TOUCH",
-        //     "ELF BAR 10KBC TOUCH": "ELFBAR 10KBC TOUCH",
-        //     "ELF BAR 16K": "ELFBAR 16K",
-        //     "ELF BAR 18K": "ELFBAR 18K",
-        //     "ELF BAR 18K TOUCH": "ELFBAR 18K TOUCH",
-        //     "ELF BAR 30K": "ELFBAR 30KTE",
-        //     "ELF BAR 5K": "ELFBAR 5KTE",
-        //     "ELF BAR 30KTE": "ELFBAR 30KTE",
-        //     "ELF BAR 5KTE": "ELFBAR 5KTE",
-        //     "ELF BAR EW 16K": "ELFBAR EW 16K REFIL",
-        //     "ELF BAR 16K": "ELFBAR EW 16K REFIL",
-        //     "ELFBAR 16K": "ELFBAR EW 16K REFIL",
-        //     "ELF BAR EW 9K": "ELFBAR EW 9K REFIL",
-        //     "ELF BAR EW 9K REFIL": "ELFBAR EW 9K REFIL",
-        //     "ELFBAR 9K": "ELFBAR EW 9K REFIL",
-        //     "ELF BAR 9K": "ELFBAR EW 9K REFIL",
-        //     "ELFBAR 23K": "ELFBAR GH23K",
-        //     "ELF BAR 23K": "ELFBAR GH23K",
-        //     "ELF BAR GH23K": "ELFBAR GH23K",
-        //     "ELF BAR GOLDEN 10KBC": "ELFBAR GOLDEN 10KBC",
-        //     "ELF BAR GOLDEN 10K": "ELFBAR GOLDEN 10KBC",
-        //     "ELFBAR GOLDEN 10K": "ELFBAR GOLDEN 10KBC",
-        //     "ELF BAR ICE KING 40K": "ELFBAR ICE KING 40K",
-        //     "ELF BAR ICE 40K": "ELFBAR ICE KING 40K",
-        //     "ELFBAR 40K": "ELFBAR ICE KING 40K",
-        //     "ELF BAR 40K": "ELFBAR ICE KING 40K",
-        //     "ELF WORLD 10K": "ELF WORLD PE10K",
-        //     "ELFBAR WORLD 10K": "ELF WORLD PE10K",
-        //     "ELF BAR WORLD 10K": "ELF WORLD PE10K",
-        //     "ELF BAR WORLD PE10K": "ELF WORLD PE10K",
-        //     "ELF BAR NICOTINE PUNCH": "ELFBAR NICOTINE PUNCH",
-        //     "ELF LIQ SALT": "ELFLIQ SALT",
-        //     "HIIO": "HIOO BY MASKKING",
-        //     "IGNITE CART": "IGNITE CART P100",
-        //     "IGNITE KIT": "IGNITE KIT P100",
-        //     "JUICE 3.5": "JUICE MASKKING 3.5",
-        //     "JUICE 5": "JUICE MASKKING 5",
-        //     "JUICE 2": "JUICE MASKKING 2",
-        //     "JUICE MR": "JUICE MR FREEZER",
-        //     "JUICE FREEZER": "JUICE MR FREEZER",
-        //     "KICK NICOTINE": "KICK NICOTINE POUCHES",
-        //     "LIFEPOD ECO": "LIFE POD ECO",
-        //     "LIFE ECO": "LIFE POD ECO",
-        //     "LIFEPOD KIT": "LIFE POD KIT",
-        //     "LIFE KIT": "LIFE POD KIT",
-        //     "LIFE REFIL 8K": "LIFE POD REFIL 8K",
-        //     "LIFE POD 8K": "LIFE POD REFIL 8K",
-        //     "LIFEPOD 8K": "LIFE POD REFIL 8K",
-        //     "LIFE SK": "LIFE POD SK",
-        //     "OXBAR 10K": "OKBAR 10K PRO",
-        //     "OXBAR 30K": "OKBAR 30K PRO",
-        //     "OKBAR 9.5K": "OKBAR 9500",
-        //     "PYNE 20K": "PYNE POD BOOST 20K",
-        //     "PYNE POD 20K": "PYNE POD BOOST 20K",
-        //     "PYNE BOOST 20K": "PYNE POD BOOST 20K",
-        //     "RAB BEASTS 10K": "RABBEATS 10K",
-        //     "STIG NICOTINE": "STIG NICOTINE POUNCHES",
-        //     "STIG POUNCHES": "STIG NICOTINE POUNCHES",
-        //     "YGG": "YGG POUCHES",
-        // }
     };
 
     const blocos = separarBlocosPorClienteTopDown(input);
@@ -576,6 +506,9 @@ function gerarTabelaFormatada(sabores, totaisTamanhos) {
         'RABBEATS 10K',
         'RabBeats 10K',
         'RabBeats RC10000',
+        'RABEATS',
+        'RABBEATS 10',
+        'RABBEATS',
         'REFIL 10K',
         'REFIL P100',
         'REFILP100',
@@ -844,6 +777,9 @@ function gerarCSVTabela(sabores, totaisTamanhos) {
         'RABBEATS 10K',
         'RabBeats 10K',
         'RabBeats RC10000',
+        'RABEATS',
+        'RABBEATS 10',
+        'RABBEATS',
         'REFIL 10K',
         'REFIL P100',
         'REFILP100',
