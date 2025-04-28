@@ -6,7 +6,7 @@ function separarBlocosPorClienteTopDown(input) {
     for (let i = 0; i < todasAsLinhas.length; i++) {
         const linhaOriginal = todasAsLinhas[i].trim();
 
-        if (linhaOriginal.match(/^Cliente:\s*.+/i)) {
+        if (linhaOriginal.match(/^\*?\s*Cliente:\s*.+/i)) {
             const nomeCliente = linhaOriginal.replace(/^Cliente:\s*/i, '').trim();
 
             blocos.push({
