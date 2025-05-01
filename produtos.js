@@ -200,6 +200,5 @@ export const produtos = [
     'ZYN',
     'ZYN Nicotine Pouches',
     'yGG pouches',
-    '23K',
-    'TESTE'
+    '23K'
 ];
